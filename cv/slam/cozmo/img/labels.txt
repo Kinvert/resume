@@ -1,0 +1,11 @@
+person
+legoperson
+car
+truck
+bus
+road
+crosswalk
+garage
+cone
+carwash
+sign

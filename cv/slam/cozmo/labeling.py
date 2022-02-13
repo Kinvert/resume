@@ -6,7 +6,21 @@ import time
 
 from utils import add_zeros
 
-def img_create(robot: cozmo.robot.Robot):
+p1 = ()
+p2 = ()
+drawing = False
+
+def label_draw(event, x, y, flags, params):
+    global p1, p2, drawing
+    if event == cv2.EVENT_LBUTTONDOWN:
+        drawing = True
+        p1 = (x, y)
+        p2 = ()
+    elif event == cv2.EVENT_LBUTTONUP:
+        drawing = False
+        p2 = (x, y)
+        
+def img_label(robot: cozmo.robot.Robot):
     '''
     Watch values labeled as important
     
@@ -34,6 +48,9 @@ def img_create(robot: cozmo.robot.Robot):
     short_fname = 'cube1'                           # IMPORTANT
     #======================================================================
     #======================================================================
+    
+    cv2.namedWindow('label')
+    cv2.setMouseCallback('label', label_draw)
 
     while True:
         latest_image = robot.world.latest_image
@@ -41,9 +58,15 @@ def img_create(robot: cozmo.robot.Robot):
             raw_img = latest_image.raw_image # 320 X 240
             cv_img = np.array(raw_img).astype(np.uint8)
             cv_img = cv2.cvtColor(cv_img, cv2.COLOR_BGR2GRAY)
-            
-            cv2.imshow('asdf', cv_img)
-            c = cv2.waitKey(0)
+            drawn = cv_img.copy()
+            cv2.imshow('label', cv_img)
+            c = cv2.waitKey(1)
+            while c == -1:
+                if p1 and p2 and drawing is False:
+                    drawn = cv2.rectangle(drawn, p1, p2, 255)
+                    cv2.imshow('label', drawn)
+                c = cv2.waitKey(10)
+                print(c)
             if c == ord('s'):
                 i = 0
                 i_string = add_zeros(i, digits)
@@ -59,6 +82,7 @@ def img_create(robot: cozmo.robot.Robot):
                 print('quit')
                 cv2.destroyAllWindows()
                 break
+    cv2.destroyAllWindows()
         
 cozmo.robot.Robot.drive_off_charger_on_connect = False
-cozmo.run_program(img_create)
+cozmo.run_program(img_label)
