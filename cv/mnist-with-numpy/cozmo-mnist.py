@@ -7,13 +7,13 @@ import cozmo
 
 # Setup
 start = time.time()
-epochs = 3
+epochs = 1
 lr = 0.01
 batch = 1
 debug_data_aug = False
 
 def add_noise(x):
-    amt = 150
+    amt = random.randint(50,200)
     x = (x + amt*np.random.rand(x.shape[0], x.shape[1]))
     x = x - np.min(x)
     x = x * (255 / np.max(x))
@@ -98,8 +98,9 @@ def data_aug(x):
 print('Importing MNIST Data')
 from keras.datasets import mnist
 (X_train, Y_train), (X_test, Y_test) = mnist.load_data()
+np.append(X_train, X_test)
+np.append(Y_train, Y_test)
 X_train = X_train #.reshape(-1, 784)/255
-X_test = X_test.reshape(-1, 784)/255
 from keras.utils.np_utils import to_categorical
 Y_train = to_categorical(Y_train)
 Y_test = to_categorical(Y_test)
