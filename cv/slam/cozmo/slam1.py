@@ -66,7 +66,8 @@ def slam(robot: cozmo.robot.Robot):
             keypoints = orb_method(cv_img) # 2.94s benchmark
             
             #cv2.circle(cv_img, (int(keypoint.pt[0]),int(keypoint.pt[1])), 2, 255, -1) # cv2.drawKeypoints is slightly slower maybe 10% or so
-            cv_img = cv2.drawKeypoints(cv_img, keypoints, None)
+            #cv_img = cv2.drawKeypoints(cv_img, keypoints, None)
+            
             cv2.imshow('main', cv_img)
             cv2.waitKey(1)
             i += 1
