@@ -1,5 +1,5 @@
 # Army Tank Laser Tag
-This was another project for Maker Faire Detroit. This was for 2016.
+This was another project for Maker Faire Detroit. This was for 2016. I managed this and students coded it.
 
 Originally this was going to be a portable table with the tanks driving around on it.
 
