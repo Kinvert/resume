@@ -13,6 +13,7 @@ Made MNIST from scratch using Numpy.
 In addition, I made a version where I can take pictures with Anki Cozmo and have it predict the new hand written numbers.
 
 ### Maze Solving Robot - 2015
+https://www.youtube.com/watch?v=stuCPNpmuDA
 This was a robot commanded by a Raspberry Pi that would take a picture of a maze before navigation.
 
 ### Other Small Programs
