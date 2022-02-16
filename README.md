@@ -31,4 +31,5 @@ https://youtu.be/EbC444fI4sk?t=244
 Another project I oversaw which was made by students. A dump truck, loader, and bulldozer would scoop beads.
 
 ### Logitech Driver Using Assembly - Christmas Break 2010-2011
+https://www.youtube.com/watch?v=XJqs5wlxxEY
 I reverse engineered how the joystick worked, and replaced the board so it would work with microcontrollers.
