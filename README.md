@@ -16,6 +16,10 @@ In addition, I made a version where I can take pictures with Anki Cozmo and have
 https://www.youtube.com/watch?v=stuCPNpmuDA
 This was a robot commanded by a Raspberry Pi that would take a picture of a maze before navigation.
 
+### Robotics Competition Win - 2013
+https://www.youtube.com/watch?v=FAjJAI83jM0
+This robot was in a simulated shipping port. The goal was to pick up blocks, and place them in the correct place based on their size and color. I was in charge of the Computer Vision.
+
 ### Other Small Programs
 There are several other small things, such as making a Sobel Operator with Numpy for example. This would be found in the Spatial folder.
 
