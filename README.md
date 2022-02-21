@@ -7,10 +7,12 @@ Under the cv folder are some things I've done in Computer Vision.
 ### SLAM - 2022
 In the process of making Anki Cozmo do SLAM through a Lego city.
 
-### MNIST With Numpy - 2022
+### MNIST From Scratch - 2022
 Made MNIST from scratch using Numpy.
 
 In addition, I made a version where I can take pictures with Anki Cozmo and have it predict the new hand written numbers.
+
+Also, I am making MNIST from scratch with C++.
 
 ### Maze Solving Robot - 2015
 https://www.youtube.com/watch?v=stuCPNpmuDA
