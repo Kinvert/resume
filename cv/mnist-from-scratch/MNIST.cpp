@@ -60,8 +60,8 @@ int main()
     ######################################################
     */
     int div_by = 100;
-    int epochs = 10;
-    double lr = 0.1;
+    int epochs = 8;
+    double lr = 0.25;
     
     vector<Eigen::MatrixXi> Y_train;
     std::ifstream filey("train-labels.idx1-ubyte", std::ios::binary);
@@ -92,7 +92,6 @@ int main()
         std::cout << "FAILED TO LOAD THE FILE";
         return 0;
     }
-    cout << Y_train[0];
     
 
     /*
@@ -164,9 +163,12 @@ int main()
     w0 = Eigen::MatrixXd::Random(64, 784);
     w1 = Eigen::MatrixXd::Random(32, 64);
     out = Eigen::MatrixXd::Random(10, 32);
-    w0 = w0.array().abs() * sqrt(1 / (double)(64 + 784));
-    w1 = w1.array().abs() * sqrt(1 / (double)(32 + 64));
-    out = out.array().abs() * sqrt(1 / (double)(10 + 32));
+    //w0 = w0.array().abs() * sqrt(1 / (double)(64 + 784));
+    //w1 = w1.array().abs() * sqrt(1 / (double)(32 + 64));
+    //out = out.array().abs() * sqrt(1 / (double)(10 + 32));
+    w0 = ((w0.array() + 1) / (double)2) * sqrt(1 / (double)(64 + 784));
+    w1 = ((w1.array() + 1) / (double)2) * sqrt(1 / (double)(32 + 64));
+    out = ((out.array() + 1) / (double)2) * sqrt(1 / (double)(10 + 32));
 
     // Main Loop
     for (int epoch = 0; epoch < epochs; epoch++) {
@@ -174,6 +176,19 @@ int main()
         int corrects_sum = 0;
         int img_num = 0;
         vector<int> corrects;
+        Eigen::MatrixXd old_dx_out;
+        Eigen::MatrixXd old_dx_w1;
+        Eigen::MatrixXd old_dx_w0;
+        old_dx_out = Eigen::MatrixXd::Zero(10, 32);
+        old_dx_w1 = Eigen::MatrixXd::Zero(32, 64);
+        old_dx_w0 = Eigen::MatrixXd::Zero(64, 784);
+        Eigen::MatrixXd vold_dx_out;
+        Eigen::MatrixXd vold_dx_w1;
+        Eigen::MatrixXd vold_dx_w0;
+        vold_dx_out = Eigen::MatrixXd::Zero(10, 32);
+        vold_dx_w1 = Eigen::MatrixXd::Zero(32, 64);
+        vold_dx_w0 = Eigen::MatrixXd::Zero(64, 784);
+
         for (int i = 0; i < int(60000/div_by); i++) {
 
             // Data Matrices
@@ -237,12 +252,18 @@ int main()
             dx_w0 = error_final.transpose() * x; // (64, 784)
 
             // Adjust Weights
-            out = out - lr * dx_out;
-            w0 = w0 - lr * dx_w0;
-            w1 = w1 - lr * dx_w1;
+            out = out.array() - lr * dx_out.array() - 0.5 * lr * old_dx_out.array() - 0.25 * lr * vold_dx_out.array();
+            w0 = w0.array() - lr * dx_w0.array() - 0.5 * lr * old_dx_w0.array() - 0.25 * lr * vold_dx_w0.array();
+            w1 = w1.array() - lr * dx_w1.array() - 0.5 * lr * old_dx_w1.array() - 0.25 * lr * vold_dx_w1.array();
             if (i > 0) {
                 correct_percent = corrects_sum / (double)i;
             }
+            vold_dx_out = old_dx_out;
+            vold_dx_w1 = old_dx_w1;
+            vold_dx_w0 = old_dx_w0;
+            old_dx_out = dx_out;
+            old_dx_w1 = dx_w1;
+            old_dx_w0 = dx_w0;
         }
         cout << endl << "Correct Percent = " << correct_percent;
     }
