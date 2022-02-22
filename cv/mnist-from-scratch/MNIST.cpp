@@ -8,6 +8,7 @@
 
 /*
 TODO
+    Compare speed of float vs double
     Improve learning rate decay
     Normal Distribution for weight initialization
     Add Data Augmentation
@@ -32,24 +33,18 @@ DONE
     Beat 90% on validation data
 */
 
-// Begin https://stackoverflow.com/questions/8286668/how-to-read-mnist-data-in-c
-int reverseInt(int i)
-{
+int reverseInt(int i) {
+    // Begin https://stackoverflow.com/questions/8286668/how-to-read-mnist-data-in-c
     unsigned char c1, c2, c3, c4;
-
     c1 = i & 255;
     c2 = (i >> 8) & 255;
     c3 = (i >> 16) & 255;
     c4 = (i >> 24) & 255;
-
     return ((int)c1 << 24) + ((int)c2 << 16) + ((int)c3 << 8) + c4;
 }
-// End https://stackoverflow.com/questions/8286668/how-to-read-mnist-data-in-c
 
 Eigen::MatrixXf np_dot(Eigen::MatrixXf error, Eigen::MatrixXf weights) {
-    /*
-    Basically a Numpy Dot Product. Eigen doesn't seem to do this but who knows maybe they do.
-    */
+    // Basically a Numpy Dot Product. Eigen doesn't seem to do this but who knows maybe they do.
     Eigen::MatrixXf output(1, weights.cols());
     for (int i = 0; i < weights.cols(); i++) {
         float thesum = 0;
@@ -62,9 +57,7 @@ Eigen::MatrixXf np_dot(Eigen::MatrixXf error, Eigen::MatrixXf weights) {
 }
 
 Eigen::MatrixXf relu_grad(Eigen::MatrixXf error, Eigen::MatrixXf res_rel) {
-    /*
-       error = np.dot(out.T, error) * (res_rel1 > 0)     This is the (res_rel > 0) portion
-    */
+    // error = np.dot(out.T, error) * (res_rel1 > 0)     This is the (res_rel > 0) portion
     Eigen::MatrixXf output(1, res_rel.rows());
     for (int i = 0; i < res_rel.rows(); i++) {
         if (res_rel(i) > 0) {
@@ -77,20 +70,14 @@ Eigen::MatrixXf relu_grad(Eigen::MatrixXf error, Eigen::MatrixXf res_rel) {
     return output;
 }
 
-int main()
-{
-    int div_by = 1;
-    int epochs = 2;
-    float lr = 0.25;
-    int runs = int(60000 / div_by);
-
+std::vector<Eigen::MatrixXi> load_y_data(const char *gotstring, int runs) {
     /*
     ######################################################
                        LOAD Y DATA
     ######################################################
     */
-    std::vector<Eigen::MatrixXi> Y_train;
-    std::ifstream filey("train-labels.idx1-ubyte", std::ios::binary);
+    std::vector<Eigen::MatrixXi> Y;
+    std::ifstream filey(gotstring, std::ios::binary);
     if (filey.is_open())
     {
         int magic_number = 0;
@@ -111,44 +98,48 @@ int main()
             filey.read((char*)&temp, sizeof(temp));
             label_int = temp;
             label(0, label_int) = 1;
-            Y_train.push_back(label);
+            Y.push_back(label);
         }
         filey.close();
+        return Y;
     }
     else {
         std::cout << "FAILED TO LOAD THE FILE";
-        return 0;
+        Y.push_back(Eigen::MatrixXi::Zero(1, 10));
+        return Y; // Send zeros if load fails
     }
+}
 
+std::vector<Eigen::MatrixXf> load_x_data(const char* gotstring, int runs) {
     /*
     ######################################################
                        LOAD X DATA
     ######################################################
     */
-    std::vector<Eigen::MatrixXf> X_train;
-    std::vector<Eigen::MatrixXf> X_train_flat;
+    std::vector<Eigen::MatrixXf> X;
+    std::vector<Eigen::MatrixXf> X_flat;
     // LOAD THE MNIST DATA http://yann.lecun.com/exdb/mnist/
     // MNIST Data https://stackoverflow.com/questions/23253485/little-endian-reading-mnist-file-numbers-out-of-range
     // MNIST Data https://stackoverflow.com/questions/8286668/how-to-read-mnist-data-in-c
     // MNIST Data https://stackoverflow.com/questions/12993941/how-can-i-read-the-mnist-dataset-with-c
     // MNIST Data https://stackoverflow.com/questions/16871512/how-to-read-pixels-from-mnist-digit-database-and-create-the-iplimage?noredirect=1&lq=1
     // 3D Eigen https://stackoverflow.com/questions/17098218/most-efficient-option-for-build-3d-structures-using-eigen-matrices
-    std::ifstream file("train-images.idx3-ubyte", std::ios::binary);
-    if (file.is_open())
+    std::ifstream filex(gotstring, std::ios::binary);
+    if (filex.is_open())
     {
         int magic_number = 0;
         int number_of_images = 0;
         int n_rows = 0;
         int n_cols = 0;
-        file.read((char*)&magic_number, sizeof(magic_number));
+        filex.read((char*)&magic_number, sizeof(magic_number));
         magic_number = reverseInt(magic_number);
-        file.read((char*)&number_of_images, sizeof(number_of_images));
+        filex.read((char*)&number_of_images, sizeof(number_of_images));
         number_of_images = reverseInt(number_of_images);
         std::cout << number_of_images << std::endl;
-        file.read((char*)&n_rows, sizeof(n_rows));
+        filex.read((char*)&n_rows, sizeof(n_rows));
         n_rows = reverseInt(n_rows);
         std::cout << "n_rows = " << n_rows << std::endl;
-        file.read((char*)&n_cols, sizeof(n_cols));
+        filex.read((char*)&n_cols, sizeof(n_cols));
         n_cols = reverseInt(n_cols);
         std::cout << "n_cols = " << n_cols << std::endl;
         //int thing;
@@ -163,7 +154,7 @@ int main()
                 for (int c = 0; c < n_cols; ++c)
                 {
                     unsigned char temp = 0;
-                    file.read((char*)&temp, sizeof(temp));
+                    filex.read((char*)&temp, sizeof(temp));
                     int mnist_int = temp;
                     //int idx = r * 28 + c;
                     float mnist_float = mnist_int / 255.0;
@@ -172,14 +163,38 @@ int main()
                 }
             }
             thisImage.resize(1, 784);
-            X_train.push_back(thisImage);
+            X.push_back(thisImage);
             //X_train_flat.push_back(thisImageFlat);
         }
-        file.close();
+        filex.close();
+        return X;
     }
     else {
         std::cout << "FAILED TO LOAD THE FILE";
-        return 0;
+        X.push_back(Eigen::MatrixXf::Zero(1, 784));
+        return X;
+    }
+}
+
+int main()
+{
+    int div_by = 100; // Use this to run on smaller number of MNIST images
+    int epochs = 5;
+    float lr = 0.25;
+    int runs = int(60000 / div_by);
+
+    // Load Y Data
+    std::vector<Eigen::MatrixXi> Y_train;
+    Y_train = load_y_data("train-labels.idx1-ubyte", runs);
+    if (Y_train[0].sum() == 0) {
+        return 0; // Fail Elegantly
+    }
+
+    // Load X Data
+    std::vector<Eigen::MatrixXf> X_train;
+    X_train = load_x_data("train-images.idx3-ubyte", runs);
+    if (X_train[0].sum() == 0) {
+        return 0; // Fail Elegantly
     }
     
     // Layers
@@ -350,102 +365,18 @@ int main()
     div_by = 10;
     runs = int(10000 / div_by);
 
-    /*
-    ######################################################
-                       LOAD Y DATA
-    ######################################################
-    */
+    // Load Y Data
     std::vector<Eigen::MatrixXi> Y_test;
-    std::ifstream fileyt("t10k-labels.idx1-ubyte", std::ios::binary);
-    if (fileyt.is_open())
-    {
-        int magic_number = 0;
-        int number_of_images = 0;
-        int n_rows = 0;
-        int n_cols = 0;
-        fileyt.read((char*)&magic_number, sizeof(magic_number));
-        magic_number = reverseInt(magic_number);
-        fileyt.read((char*)&number_of_images, sizeof(number_of_images));
-        number_of_images = reverseInt(number_of_images);
-        std::cout << number_of_images << std::endl;
-        int label_int;
-        for (int i = 0; i < runs; i++)
-        {
-            Eigen::MatrixXi label;
-            label = Eigen::MatrixXi::Zero(1, 10);
-            unsigned char temp = 0;
-            fileyt.read((char*)&temp, sizeof(temp));
-            label_int = temp;
-            label(0, label_int) = 1;
-            Y_test.push_back(label);
-        }
-        fileyt.close();
-    }
-    else {
-        std::cout << "FAILED TO LOAD THE FILE";
-        return 0;
+    Y_test = load_y_data("t10k-labels.idx1-ubyte", runs);
+    if (Y_test[0].sum() == 0) {
+        return 0; // Fail Elegantly
     }
 
-    /*
-    ######################################################
-                       LOAD X DATA
-    ######################################################
-    */
+    // Load X Data
     std::vector<Eigen::MatrixXf> X_test;
-    std::vector<Eigen::MatrixXf> X_test_flat;
-    // LOAD THE MNIST DATA http://yann.lecun.com/exdb/mnist/
-    // MNIST Data https://stackoverflow.com/questions/23253485/little-endian-reading-mnist-file-numbers-out-of-range
-    // MNIST Data https://stackoverflow.com/questions/8286668/how-to-read-mnist-data-in-c
-    // MNIST Data https://stackoverflow.com/questions/12993941/how-can-i-read-the-mnist-dataset-with-c
-    // MNIST Data https://stackoverflow.com/questions/16871512/how-to-read-pixels-from-mnist-digit-database-and-create-the-iplimage?noredirect=1&lq=1
-    // 3D Eigen https://stackoverflow.com/questions/17098218/most-efficient-option-for-build-3d-structures-using-eigen-matrices
-    std::ifstream filet("t10k-images.idx3-ubyte", std::ios::binary);
-    if (filet.is_open())
-    {
-        int magic_number = 0;
-        int number_of_images = 0;
-        int n_rows = 0;
-        int n_cols = 0;
-        filet.read((char*)&magic_number, sizeof(magic_number));
-        magic_number = reverseInt(magic_number);
-        filet.read((char*)&number_of_images, sizeof(number_of_images));
-        number_of_images = reverseInt(number_of_images);
-        std::cout << number_of_images << std::endl;
-        filet.read((char*)&n_rows, sizeof(n_rows));
-        n_rows = reverseInt(n_rows);
-        std::cout << "n_rows = " << n_rows << std::endl;
-        filet.read((char*)&n_cols, sizeof(n_cols));
-        n_cols = reverseInt(n_cols);
-        std::cout << "n_cols = " << n_cols << std::endl;
-        //int thing;
-        //int mnist_int;
-        //float mnist_float;
-        for (int i = 0; i < runs; i++)
-        {
-            Eigen::MatrixXf thisImage(28, 28);
-            Eigen::MatrixXf thisImageFlat(1, 784);
-            for (int r = 0; r < n_rows; ++r)
-            {
-                for (int c = 0; c < n_cols; ++c)
-                {
-                    unsigned char temp = 0;
-                    filet.read((char*)&temp, sizeof(temp));
-                    int mnist_int = temp;
-                    //int idx = r * 28 + c;
-                    float mnist_float = mnist_int / 255.0;
-                    thisImage(r, c) = mnist_float;
-                    //thisImageFlat(0, idx);
-                }
-            }
-            thisImage.resize(1, 784);
-            X_test.push_back(thisImage);
-            //X_train_flat.push_back(thisImageFlat);
-        }
-        filet.close();
-    }
-    else {
-        std::cout << "FAILED TO LOAD THE FILE";
-        return 0;
+    X_test = load_x_data("t10k-images.idx3-ubyte", runs);
+    if (X_test[0].sum() == 0) {
+        return 0; // Fail Elegantly
     }
 
     float loss = 0.0;
