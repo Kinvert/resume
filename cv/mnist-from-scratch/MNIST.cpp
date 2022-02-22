@@ -1,14 +1,12 @@
 #include <Eigen/Dense>
 #include <Eigen/src/Core/Product.h>
 
-#include <chrono>
 #include <iostream>
 #include <fstream>
 #include <vector>
 
 /*
 TODO
-    Compare speed of float vs double
     Improve learning rate decay
     Normal Distribution for weight initialization
     Add Data Augmentation
@@ -18,8 +16,9 @@ TODO
     Batch Normalization
     Adam
     Measure times of different parts of the program
-    Beat 92% on validation data
     Get some of these chunks in to functions, such as Forward Pass
+    Make np_dot and relu_grad handle bad sized matrices without hard fail
+    Beat 95%
 
 DONE
     Load MNIST Data
@@ -31,10 +30,14 @@ DONE
     Xavier Initialization
     Get convergence on small slice of dataset
     Beat 90% on validation data
+    Load data with functions
+    Compare speed of float vs double (With Eigen the doubles seem slower than floats)
+    Beat 92% on validation data (94.5%+)
+    Xavier Initialization Function
 */
 
 int reverseInt(int i) {
-    // Begin https://stackoverflow.com/questions/8286668/how-to-read-mnist-data-in-c
+    // https://stackoverflow.com/questions/8286668/how-to-read-mnist-data-in-c
     unsigned char c1, c2, c3, c4;
     c1 = i & 255;
     c2 = (i >> 8) & 255;
@@ -117,7 +120,6 @@ std::vector<Eigen::MatrixXf> load_x_data(const char* gotstring, int runs) {
     ######################################################
     */
     std::vector<Eigen::MatrixXf> X;
-    std::vector<Eigen::MatrixXf> X_flat;
     // LOAD THE MNIST DATA http://yann.lecun.com/exdb/mnist/
     // MNIST Data https://stackoverflow.com/questions/23253485/little-endian-reading-mnist-file-numbers-out-of-range
     // MNIST Data https://stackoverflow.com/questions/8286668/how-to-read-mnist-data-in-c
@@ -142,9 +144,6 @@ std::vector<Eigen::MatrixXf> load_x_data(const char* gotstring, int runs) {
         filex.read((char*)&n_cols, sizeof(n_cols));
         n_cols = reverseInt(n_cols);
         std::cout << "n_cols = " << n_cols << std::endl;
-        //int thing;
-        //int mnist_int;
-        //float mnist_float;
         for (int i = 0; i < runs; i++)
         {
             Eigen::MatrixXf thisImage(28, 28);
@@ -156,15 +155,12 @@ std::vector<Eigen::MatrixXf> load_x_data(const char* gotstring, int runs) {
                     unsigned char temp = 0;
                     filex.read((char*)&temp, sizeof(temp));
                     int mnist_int = temp;
-                    //int idx = r * 28 + c;
                     float mnist_float = mnist_int / 255.0;
                     thisImage(r, c) = mnist_float;
-                    //thisImageFlat(0, idx);
                 }
             }
-            thisImage.resize(1, 784);
+            thisImage.resize(1, 784); // Flatten the image
             X.push_back(thisImage);
-            //X_train_flat.push_back(thisImageFlat);
         }
         filex.close();
         return X;
@@ -172,14 +168,44 @@ std::vector<Eigen::MatrixXf> load_x_data(const char* gotstring, int runs) {
     else {
         std::cout << "FAILED TO LOAD THE FILE";
         X.push_back(Eigen::MatrixXf::Zero(1, 784));
-        return X;
+        return X; // Send zeros if load fails
     }
+}
+
+Eigen::MatrixXf box_muller(Eigen::MatrixXf mat) {
+    /*
+    From Uniform Distribution to a sort of triangle distribution
+    https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
+    */
+    Eigen::MatrixXf second(mat.rows(), mat.cols()); // Box-Muller requires two sets of random data
+    second = Eigen::MatrixXf::Random(mat.rows(), mat.cols());
+    second = ((second.array() + 1) / (float)2);
+    mat = sqrt(-2 * log(mat.array())) * cos(2 * 3.14 * second.array()); // Box-Muller
+    for (int r = 0; r < mat.rows(); r++) { // Sometimes I get a NAN probably getting negative square roots due to Eigen's Random algo
+        for (int c = 0; c < mat.cols(); c++) {
+            if (mat(r, c) == mat(r, c)) {
+            }
+            else {
+                mat(r, c) = 0.500;
+            }
+        }
+    }
+    return mat;
+}
+
+Eigen::MatrixXf xavier_initialization(Eigen::MatrixXf mat) {
+    /*
+    Xavier Initialization to keep weights sane during gradient descent
+    */
+    mat = mat.array() * sqrt(1 / (float)(mat.rows() + mat.cols()));
+    return mat;
 }
 
 int main()
 {
-    int div_by = 100; // Use this to run on smaller number of MNIST images
-    int epochs = 5;
+    // Init Training
+    int div_by = 1; // Use this to run on smaller number of MNIST images
+    int epochs = 2;
     float lr = 0.25;
     int runs = int(60000 / div_by);
 
@@ -201,12 +227,21 @@ int main()
     Eigen::MatrixXf w0;
     Eigen::MatrixXf w1;
     Eigen::MatrixXf out;
-    w0 = Eigen::MatrixXf::Random(64, 784);
+    w0 = Eigen::MatrixXf::Random(64, 784); // Eigen only does Uniform -1 to 1
     w1 = Eigen::MatrixXf::Random(32, 64);
     out = Eigen::MatrixXf::Random(10, 32);
-    w0 = ((w0.array() + 1) / (float)2) * sqrt(1 / (float)(64 + 784));
-    w1 = ((w1.array() + 1) / (float)2) * sqrt(1 / (float)(32 + 64));
-    out = ((out.array() + 1) / (float)2) * sqrt(1 / (float)(10 + 32));
+
+    w0 = ((w0.array() + 1) / (float)2); // Change to Uniform 0 to 1
+    w1 = ((w1.array() + 1) / (float)2);
+    out = ((out.array() + 1) / (float)2);
+
+    w0 = box_muller(w0).array(); // Box-Muller
+    w1 = box_muller(w1).array();
+    out = box_muller(out).array();
+
+    w0 = xavier_initialization(w0); //  Xavier Initialization
+    w1 = xavier_initialization(w1);
+    out = xavier_initialization(out);
 
     // Dx Initialization
     Eigen::MatrixXf old_dx_out;
@@ -264,7 +299,8 @@ int main()
             res_rel1 << res_w1.cwiseMax(0);
             res_out << out * res_rel1;
             softMaxValue = res_out.array() - res_out.maxCoeff();
-            guess << exp(softMaxValue.array()) / (exp(softMaxValue.array())).sum(); // guess = np.exp(res_out - res_out.max()) / np.sum(np.exp(res_out - res_out.max()), axis=0)
+            guess << exp(softMaxValue.array()) / (exp(softMaxValue.array())).sum(); // guess = np.exp(res_out - res_out.max()) / np.sum(np.exp(res_out - res_out.max()), axis=0
+            
             error << guess(0) - y(0), guess(1) - y(1), guess(2) - y(2), guess(3) - y(3), guess(4) - y(4), guess(5) - y(5), guess(6) - y(6), guess(7) - y(7), guess(8) - y(8), guess(9) - y(9);
 
             // Loss and Accuracy
@@ -318,6 +354,8 @@ int main()
             w0 = w0.array() - this_lr * dx_w0.array() - 0.25 * this_lr * old_dx_w0.array() - 0.1 * this_lr * vold_dx_w0.array();
             w1 = w1.array() - this_lr * dx_w1.array() - 0.25 * this_lr * old_dx_w1.array() - 0.1 * this_lr * vold_dx_w1.array();
             lr_mod = 1.0;
+
+            // Adjust Learning Rate Over Time
             if (i > 0) {
                 correct_percent = corrects_sum / (float)i;
                 if (i % 1000 == 0) {
@@ -333,10 +371,10 @@ int main()
                     lr = 0.075;
                 }
                 else if (i > 2000 && correct_percent > 0.74 && correct_percent <= 0.87) {
-                    lr = 0.001;
+                    lr = 0.05;
                 }
                 else if (i > 2000 && correct_percent > 0.87 && correct_percent <= 0.95) {
-                    lr = 0.0001;
+                    lr = 0.0025;
                 }
             }
 
@@ -362,7 +400,8 @@ int main()
     ===================================================================================================================================================== 
     */
 
-    div_by = 10;
+    // Init Validation
+    div_by = 1;
     runs = int(10000 / div_by);
 
     // Load Y Data
