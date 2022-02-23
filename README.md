@@ -39,3 +39,9 @@ Another project I oversaw which was made by students. A dump truck, loader, and 
 ### Logitech Driver Using Assembly - Christmas Break 2010-2011
 https://www.youtube.com/watch?v=XJqs5wlxxEY
 I reverse engineered how the joystick worked, and replaced the board so it would work with microcontrollers.
+
+## Simulations
+I've written simulation algorithms over the years. This is where I'll add old ones I find or new ones I write.
+
+### Brake Rotor Heat Transfer - 2012
+Simulating temperatures in brake rotors.
