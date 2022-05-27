@@ -107,7 +107,7 @@ std::vector<Eigen::MatrixXi> load_y_data(const char *gotstring, int runs) {
         return Y;
     }
     else {
-        std::cout << "FAILED TO LOAD THE FILE";
+        std::cout << "FAILED TO LOAD THE FILE " << gotstring << std::endl;;
         Y.push_back(Eigen::MatrixXi::Zero(1, 10));
         return Y; // Send zeros if load fails
     }
@@ -166,7 +166,7 @@ std::vector<Eigen::MatrixXf> load_x_data(const char* gotstring, int runs) {
         return X;
     }
     else {
-        std::cout << "FAILED TO LOAD THE FILE";
+        std::cout << "FAILED TO LOAD THE FILE " << gotstring << std::endl;
         X.push_back(Eigen::MatrixXf::Zero(1, 784));
         return X; // Send zeros if load fails
     }
