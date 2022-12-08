@@ -1,4 +1,12 @@
-A project I did in September 2022.
+# MNIST Autoencoder Visualizations 03
+
+This is a project I did in September 2022. Some of the results can be seen below.
+
+This image shows the final frame of the animation. Basically I just did a slow blend between this image and its transpose.
+
+<img src="https://github.com/Kinvert/resume/blob/main/ml/autoencoders/mnist_visualizations_3_sorted_grid/final_frame.png" width="280" height="280"/>
+
+## YouTube Videos
 
 I briefly talk about this project here:
 
@@ -7,3 +15,9 @@ I briefly talk about this project here:
 and:
 
 [![Discussion Video 2](https://img.youtube.com/vi/TDQfSwIOx18/0.jpg)](https://www.youtube.com/watch?v=TDQfSwIOx18 "Discussion Video 2")
+
+## MP4s
+
+grid_blend.mp4 is an older result, where some randome numbers blend to other random numbers.
+
+sorted_grid_blend.mp4 is the result of blending each number to each other number in a grid.
