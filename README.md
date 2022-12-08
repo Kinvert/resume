@@ -2,12 +2,14 @@
 A place for me to show some stuff I made and other projects I managed.
 
 ## Table of Contents
+
 - [Computer Vision](#computer-vision)
 - [Embedded](#embedded)
 - [Simulations](#simulations)
 
+
 ## Computer Vision
-Under the cv folder are some things I've done in Computer Vision.
+[Computer Vision Folder](https://github.com/Kinvert/resume/tree/main/cv)
 
 ### SLAM - 2022
 In the process of making Anki Cozmo do SLAM through a Lego city.
