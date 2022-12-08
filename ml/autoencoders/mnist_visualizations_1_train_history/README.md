@@ -16,6 +16,8 @@ I briefly talk about this project here:
 
 [![Discussion Video](https://img.youtube.com/vi/L52H2fggL5U/0.jpg)](https://www.youtube.com/watch?v=L52H2fggL5U&t=16s "Discussion Video")
 
-## MP4
+## MP4s
 
-The MP4 in this folder is similar to the first image, which is a gif. In this case, I created an HTML5 video. It doesn't show up in the ipynb in GitHub so I saved it as an MP4 and included it in the folder.
+The single_digit.mp4 in this folder is similar to the first image, which is a gif. In this case, I created an HTML5 video. It doesn't show up in the ipynb in GitHub so I saved it as an MP4 and included it in the folder.
+
+The tiled_video.mp4 shows a specific digit in each row, and how it progressed as there were more training epochs. Each digit starts out very messy but over time the autoencoder learns to more accurately recreate each digit.
