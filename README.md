@@ -24,11 +24,13 @@ In addition, I made a version where I can take pictures with Anki Cozmo and have
 Also, I am making MNIST from scratch with C++.
 
 ### Maze Solving Robot - 2015
-[![Youtube Link][logo]](https://youtu.be/stuCPNpmuDA) &nbsp; [Maze Solving Robot](https://github.com/Kinvert/resume/tree/main/cv/maze-solving-robot)
+[![Youtube Link][logo]](https://youtu.be/stuCPNpmuDA) &nbsp; [Maze Solving Robot Folder](https://github.com/Kinvert/resume/tree/main/cv/maze-solving-robot)
+
 This was a robot commanded by a Raspberry Pi that would take a picture of a maze before navigation.
 
 ### Robotics Competition Win - 2013
-https://www.youtube.com/watch?v=FAjJAI83jM0
+[![Youtube Link][logo]](https://youtu.be/FAjJAI83jM0) &nbsp; [Robotics Competition 2013 Folder](https://github.com/Kinvert/resume/tree/main/cv/robotics-competition-2013)
+
 This robot was in a simulated shipping port. The goal was to pick up blocks, and place them in the correct place based on their size and color. I was in charge of the Computer Vision.
 
 ### Other Small Programs
@@ -38,15 +40,18 @@ There are several other small things, such as making a Sobel Operator with Numpy
 Non Computer Vision projects, that are embedded.
 
 ### Army Tank Laser Tag - 2017
-https://youtu.be/EbC444fI4sk?t=244
+[![Youtube Link][logo]](https://youtu.be/EbC444fI4sk?t=244) &nbsp; [Army Tank Laser Tag Folder](https://github.com/Kinvert/resume/tree/main/embedded/army-tank-laser-tag)
+
 Students made this project and I oversaw it. There were a couple versions. I think the one I uploaded here was for the portable cart. There was another on a big table shared by the Construction Robots
 
 ### Construction Robots - 2017
-https://youtu.be/EbC444fI4sk?t=244
+[![Youtube Link][logo]](https://youtu.be/EbC444fI4sk?t=244) &nbsp; [Construction Robots Folder](https://github.com/Kinvert/resume/tree/main/embedded/construction-robots)
+
 Another project I oversaw which was made by students. A dump truck, loader, and bulldozer would scoop beads.
 
 ### Logitech Driver Using Assembly - Christmas Break 2010-2011
-https://www.youtube.com/watch?v=XJqs5wlxxEY
+[![Youtube Link][logo]](https://youtu.be/XJqs5wlxxEY) &nbsp; [Logitech Driver Folder](https://github.com/Kinvert/resume/tree/main/embedded/logitech-joystick-driver-assembly)
+
 I reverse engineered how the joystick worked, and replaced the board so it would work with microcontrollers.
 
 ## Simulations
