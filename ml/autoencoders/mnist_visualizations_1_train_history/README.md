@@ -15,3 +15,7 @@ The second image shows basically the same animation as above, except rather than
 I briefly talk about this project here:
 
 [![Discussion Video](https://img.youtube.com/vi/L52H2fggL5U/0.jpg)](https://www.youtube.com/watch?v=L52H2fggL5U&t=16s "Discussion Video")
+
+## MP4
+
+The MP4 in this folder is similar to the first image, which is a gif. In this case, I created an HTML5 video. It doesn't show up in the ipynb in GitHub so I saved it as an MP4 and included it in the folder.
