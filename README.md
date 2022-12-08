@@ -22,7 +22,7 @@ In addition, I made a version where I can take pictures with Anki Cozmo and have
 Also, I am making MNIST from scratch with C++.
 
 ### Maze Solving Robot - 2015
-https://www.youtube.com/watch?v=stuCPNpmuDA
+[![Youtube Link][logo]](https://youtu.be/stuCPNpmuDA) &nbsp; [Maze Solving Robot](https://github.com/Kinvert/resume/tree/main/cv/maze-solving-robot)
 This was a robot commanded by a Raspberry Pi that would take a picture of a maze before navigation.
 
 ### Robotics Competition Win - 2013
