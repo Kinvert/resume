@@ -1,6 +1,11 @@
 # Resume
 A place for me to show some stuff I made and other projects I managed.
 
+## Table of Contents
+- [Computer Vision](#computer-vision)
+- [Embedded](#embedded)
+- [Simulations](#simulations)
+
 ## Computer Vision
 Under the cv folder are some things I've done in Computer Vision.
 
