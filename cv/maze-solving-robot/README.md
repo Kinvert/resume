@@ -7,6 +7,12 @@ The goal of the exhibit was to get kids interested in Computer Vision and STEM i
 
 This is actually what eventually led to me founding Kinvert.
 
+<img src="https://www.kinvert.com/wp-content/uploads/2017/06/maker-faire-detroit-michigan-computer-vision-lesson-summer-for-kids-coding-1024x683.jpg">
+
+## YouTube Video
+
+[![Discussion Video 1](https://img.youtube.com/vi/stuCPNpmuDA/0.jpg)](https://www.youtube.com/watch?v=stuCPNpmuDA "Discussion Video 1")
+
 ## How it Worked
 A Raspberry Pi would run this program. It used a RaspiCam.
 
@@ -32,5 +38,3 @@ This is from memory, I don't really have time to review the code right now:
 For simplicity I think the robot only cared about the center point. If I didn't want the wheels touching I could have done that math, or I could have just dilated the non traversable path by half the robot width.
 
 Again, it was ugly temp code to just show off a robot at Maker Faire. I'm embarassed at the code but proud of the project I pulled off back then. It was a fun one.
-
-youtube.com/watch?v=stuCPNpmuDA
