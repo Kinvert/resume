@@ -1,4 +1,4 @@
-[logo]: https://github.com/Kinvert/resume/tree/main/zfiles/youtube_logo.png
+[logo]: https://github.com/Kinvert/resume/blob/main/zfiles/youtube_logo.png
 
 # Resume
 A place for me to show some stuff I made and other projects I managed.
