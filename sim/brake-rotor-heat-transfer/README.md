@@ -16,3 +16,5 @@ So more complicated than general Convolution. But similar.
 The input is initial values the user sets.
 
 The output is the chart, which I attached as an image.
+
+<img src="https://github.com/Kinvert/resume/blob/main/sim/brake-rotor-heat-transfer/SimpleRotorResult.jpg">
