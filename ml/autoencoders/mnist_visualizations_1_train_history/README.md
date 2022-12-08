@@ -1,6 +1,6 @@
 A project I did in July 2022.
 
-<img src="https://github.com/Kinvert/resume/blob/main/ml/autoencoders/mnist_visualizations_1_train_history/zzzmnist_autoencoder_vis.gif" width="280" height="280"/>
+<img src="https://github.com/Kinvert/resume/blob/main/ml/autoencoders/mnist_visualizations_1_train_history/single_digit.gif" width="280" height="280"/>
 
 I briefly talk about this project here:
 
