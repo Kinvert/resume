@@ -2,7 +2,15 @@
 
 ## Table of Contents
 
-placeholder text
+- [Circle Localization](#circle-localization)
+- [F1 Rear Wing](#f1-rear-wing)
+- [Matrices](#matrices)
+- [Maze Solving Robot](#maze-solving-robot)
+- [MNIST From Scratch](#minst-from-scratch)
+- [Robotics Competition 2013](#robotics-competition-2013)
+- [SLAM](#slam)
+- [Spatial](#spatial)
+- [Stereo](#stereo)
 
 ## Circle Localization
 
