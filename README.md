@@ -7,6 +7,7 @@ A place for me to show some stuff I made and other projects I managed.
 
 - [Computer Vision](#computer-vision)
 - [Embedded](#embedded)
+- [Machine Learning](#machine-learning)
 - [Simulations](#simulations)
 
 
@@ -53,6 +54,10 @@ Another project I oversaw which was made by students. A dump truck, loader, and 
 [![Youtube Link][logo]](https://youtu.be/XJqs5wlxxEY) &nbsp; [Logitech Driver Folder](https://github.com/Kinvert/resume/tree/main/embedded/logitech-joystick-driver-assembly)
 
 I reverse engineered how the joystick worked, and replaced the board so it would work with microcontrollers.
+
+## Machine Learning
+
+I have several but at the time of this commit I just have one. Will be adding more soon.
 
 ## Simulations
 I've written simulation algorithms over the years. This is where I'll add old ones I find or new ones I write.
